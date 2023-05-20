@@ -12,6 +12,6 @@ public class Compas {
 
     private void setFiguras(List<Integer> figurasSetear){ this.figuras = figurasSetear; }
 
-    private List<Integer> getFiguras(){ return figuras;}
+    protected List<Integer> getFiguras(){ return figuras;}
 
 }
