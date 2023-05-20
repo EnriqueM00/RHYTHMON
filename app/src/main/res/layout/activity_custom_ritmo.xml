@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".CustomRitmoActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvBinario"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6"
+            android:fontFamily="sans-serif-smallcaps"
+            android:gravity="center"
+            android:text="binario"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.2"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <ScrollView
+            android:id="@+id/scroll_binario"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:fadeScrollbars="false"
+            android:fillViewport="false"
+            android:scrollbarStyle="outsideInset"
+            tools:visibility="visible">
+
+            <TableLayout
+                android:id="@+id/table_bin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </ScrollView>
+
+    </LinearLayout>
+
+    <!--SEEKBAR 4-->
+    <TextView
+        android:id="@+id/tv_sb_discrete4"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:gravity="center_horizontal|center"
+        android:text="numDictado"
+        android:textSize="30sp" />
+
+    <LinearLayout
+        android:id="@+id/ll_seekBar_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <SeekBar
+            android:id="@+id/seekBar_discrete4"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:layout_weight="0.2"
+            android:min="0"
+            android:progress="1"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tv_seekBar_4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8"
+            android:textSize="24sp" />
+    </LinearLayout>
+    <!-- FIN SEEKBAR4-->
+
+    <!--SEEKBAR 5-->
+
+    <LinearLayout
+        android:id="@+id/ll_seekBar_5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"/>
+    <!-- FIN SEEKBAR5-->
+
+    <!--BOTONES-->
+    <Button
+        android:id="@+id/bt_jugar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:enabled="true"
+        android:onClick="IrActivityRitmo"
+        android:text="jugar" />
+
+    <Button
+        android:id="@+id/bt_volver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="VolverActivityMinijuegos"
+        android:text="volver" />
+
+</LinearLayout>
