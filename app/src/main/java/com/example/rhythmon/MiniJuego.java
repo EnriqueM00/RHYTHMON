@@ -13,17 +13,18 @@ import java.util.Random;
 public class MiniJuego extends AppCompatActivity {
 
     private final int COMPAS_LENGTH = 4;
-    private final int VALOR_MAXIMO = 4;
-    private final int VALOR_MINIMO = -4;
-    private final Map<Integer, Integer> map = new HashMap<Integer, Integer>() {{
-        map.put(1,R.drawable.corcheas);
-        map.put(-2,R.drawable.silencio_negra);
-        map.put(2,R.drawable.negra);
-        map.put(-3,R.drawable.silencio_blanca);
-        map.put(3,R.drawable.blanca);
-        map.put(-4,R.drawable.silencio_redonda);
-        map.put(4,R.drawable.redonda);
-    }}
+    private final int[] valores = {1, -2, 2, -3, 3, -4, 4};
+    public final Map<Integer, Integer> map = new HashMap<Integer, Integer>() {{
+        put(1,R.drawable.corcheas);
+        put(-2,R.drawable.silencio_negra);
+        put(2,R.drawable.negra);
+        put(-3,R.drawable.silencio_blanca);
+        put(3,R.drawable.blanca);
+        put(-4,R.drawable.silencio_redonda);
+        put(4,R.drawable.redonda);
+    }};
+    private List<Integer> valoresCompas1;
+    private List<Integer> valoresCompas2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +32,11 @@ public class MiniJuego extends AppCompatActivity {
         setContentView(R.layout.activity_mini_juego);
         Compas compas1 = generarCompas();
         Compas compas2 = generarCompas();
-
+        valoresCompas1 = traducirCompases(compas1);
+        valoresCompas2 = traducirCompases(compas2);
     }
 
-    public
+
 
     public List<Integer> traducirCompases(Compas c){
         List<Integer> valores = c.getFiguras();
@@ -45,33 +47,18 @@ public class MiniJuego extends AppCompatActivity {
         return valoresDrawable;
     }
 
-    public Map<Integer, Integer> mapearNotas(){
-        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
-        map.put(1, R.drawable.corcheas);
-        map.put(-2, R.drawable.silencio_negra);
-        map.put(2, R.drawable.negra);
-        map.put(-3, R.drawable.silencio_blanca);
-        map.put(3, R.drawable.blanca);
-        map.put(-4, R.drawable.silencio_redonda);
-        map.put(4, R.drawable.redonda);
-
-        return map;
-    }
-
     public List<Integer> generarValores(){
         List<Integer> compas = new ArrayList<Integer>();
         Random r = new Random();
         int valor = 0;
         int suma = 0;
-        for (int i = 0; suma<=COMPAS_LENGTH ; i++ ){
-            valor = r.nextInt(VALOR_MAXIMO+VALOR_MINIMO);
-            suma += traducirValor(valor);
-            if (suma > COMPAS_LENGTH){
-                suma -= traducirValor(valor);
-            }
-            else if (suma==COMPAS_LENGTH || suma < COMPAS_LENGTH){
-                compas.add(valor);
-                if (suma == COMPAS_LENGTH){
+        for (int i = 0; suma<COMPAS_LENGTH ; i++ ){
+            valor = r.nextInt(valores.length);
+            int traduccion = traducirValor(valores[valor]);
+            if (suma + traduccion <= COMPAS_LENGTH) {
+                compas.add(valores[valor]);
+                suma += traduccion;
+                if (suma == COMPAS_LENGTH) {
                     if (compasLleno(compas)) {
                         break;
                     }

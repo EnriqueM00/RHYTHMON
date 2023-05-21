@@ -36,35 +36,32 @@
         app:layout_constraintStart_toEndOf="@+id/tvNumDictados" />
 
     <ImageButton
-        android:id="@+id/imageButton3"
+        android:id="@+id/btnPlayMinijuego"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="136dp"
         android:layout_marginEnd="10dp"
         android:backgroundTint="#00FFFFFF"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton4"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toStartOf="@+id/btnAtrasMinijuego"
         app:layout_constraintStart_toEndOf="@+id/tvPuntuacion"
         app:srcCompat="@drawable/play"
         tools:layout_editor_absoluteY="16dp" />
 
     <ImageButton
-        android:id="@+id/imageButton4"
+        android:id="@+id/btnAtrasMinijuego"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="352dp"
         android:backgroundTint="#00FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageButton3"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/volver" />
+        android:minHeight="48dp"
+        app:srcCompat="@drawable/volver"
+        tools:layout_editor_absoluteX="678dp"
+        tools:layout_editor_absoluteY="17dp" />
 
     <CheckBox
         android:id="@+id/checkBoxSubdivision"
         android:layout_width="271dp"
-        android:layout_height="43dp"
+        android:layout_height="48dp"
         android:layout_marginStart="38dp"
         android:layout_marginEnd="422dp"
         android:text="ACTIVAR AYUDA DE SUBDIVISIÓN"
@@ -74,9 +71,9 @@
         app:layout_constraintTop_toBottomOf="@+id/tvNumDictados" />
 
     <CheckBox
-        android:id="@+id/checkBox2"
+        android:id="@+id/checkBoxLineaAyuda"
         android:layout_width="212dp"
-        android:layout_height="41dp"
+        android:layout_height="48dp"
         android:layout_marginStart="38dp"
         android:layout_marginEnd="481dp"
         android:text="ACTIVAR LÍNEA GUÍA"
@@ -95,7 +92,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/imageView5"
+                android:id="@+id/ivBarraCompas"
                 android:layout_width="715dp"
                 android:layout_height="52dp"
                 app:srcCompat="@drawable/barra_horizontal"
@@ -103,7 +100,7 @@
                 tools:layout_editor_absoluteY="223dp" />
 
             <ImageView
-                android:id="@+id/imageView6"
+                android:id="@+id/ivBarraGruesa"
                 android:layout_width="7dp"
                 android:layout_height="78dp"
                 app:srcCompat="@drawable/barra_gruesa"
@@ -111,7 +108,7 @@
                 tools:layout_editor_absoluteY="211dp" />
 
             <ImageView
-                android:id="@+id/imageView7"
+                android:id="@+id/ivBarraDoble"
                 android:layout_width="16dp"
                 android:layout_height="80dp"
                 app:srcCompat="@drawable/barra_doble"
@@ -119,7 +116,7 @@
                 tools:layout_editor_absoluteY="209dp" />
 
             <ImageView
-                android:id="@+id/imageView4"
+                android:id="@+id/ivCompas4Arriba"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/compas_4"
@@ -127,7 +124,7 @@
                 tools:layout_editor_absoluteY="211dp" />
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/ivCompas4Abajo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/compas_4"
@@ -135,13 +132,22 @@
                 tools:layout_editor_absoluteY="249dp" />
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/btnGolpeador"
                 android:layout_width="112dp"
                 android:layout_height="106dp"
                 android:backgroundTint="#00FFFFFF"
                 app:srcCompat="@drawable/boton"
-                tools:layout_editor_absoluteX="589dp"
-                tools:layout_editor_absoluteY="289dp" />
+                tools:layout_editor_absoluteX="557dp"
+                tools:layout_editor_absoluteY="287dp" />
+
+            <ImageView
+                android:id="@+id/ivBarraSeparadora"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:rotation="90"
+                app:srcCompat="@drawable/barra_horizontal"
+                tools:layout_editor_absoluteX="343dp"
+                tools:layout_editor_absoluteY="249dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
