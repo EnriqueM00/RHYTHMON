@@ -23,8 +23,8 @@ public class MiniJuego extends AppCompatActivity {
         put(-4,R.drawable.silencio_redonda);
         put(4,R.drawable.redonda);
     }};
-    private List<Integer> valoresCompas1;
-    private List<Integer> valoresCompas2;
+    private List<Integer> idImagenesCompas1;
+    private List<Integer> idImagenesCompas2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +32,8 @@ public class MiniJuego extends AppCompatActivity {
         setContentView(R.layout.activity_mini_juego);
         Compas compas1 = generarCompas();
         Compas compas2 = generarCompas();
-        valoresCompas1 = traducirCompases(compas1);
-        valoresCompas2 = traducirCompases(compas2);
+        idImagenesCompas1 = traducirCompases(compas1);
+        idImagenesCompas2 = traducirCompases(compas2);
     }
 
 
@@ -95,14 +95,11 @@ public class MiniJuego extends AppCompatActivity {
             int traduccion = traducirValor(figura);
             suma += traduccion;
 
-            if (suma > COMPAS_LENGTH){
+            if (suma >= COMPAS_LENGTH){
                 return true;
             }
-            else if (suma < COMPAS_LENGTH){
+            else {
                 return false;
-            }
-            else if (suma == COMPAS_LENGTH){
-                return true;
             }
         }
         return false;
