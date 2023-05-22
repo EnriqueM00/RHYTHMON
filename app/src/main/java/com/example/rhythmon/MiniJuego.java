@@ -12,6 +12,7 @@ import java.util.Random;
 
 public class MiniJuego extends AppCompatActivity {
 
+    private int codAlumno, tempo, dictados;
     private final int COMPAS_LENGTH = 4;
     private final int[] valores = {1, -2, 2, -3, 3, -4, 4};
     public final Map<Integer, Integer> map = new HashMap<Integer, Integer>() {{
@@ -30,6 +31,12 @@ public class MiniJuego extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mini_juego);
+
+        Bundle b = getIntent().getExtras();
+        codAlumno = b.getInt("codAlumno");
+        tempo = b.getInt("tempo");
+        dictados = b.getInt("dictados");
+
         Compas compas1 = generarCompas();
         Compas compas2 = generarCompas();
         idImagenesCompas1 = traducirCompases(compas1);

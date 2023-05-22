@@ -40,6 +40,9 @@ public class InicioUsuario extends AppCompatActivity {
                     if (a.getId_user().equals(user)){
                         if (a.getContraseña().equals(password)){
                             Intent i = new Intent(InicioUsuario.this, Preconfig.class);
+                            Bundle b = new Bundle();
+                            b.putInt("codAlumno",a.getCodAlumno());
+                            i.putExtras(b);
                             startActivity(i);
                         }
                         else{

@@ -17,16 +17,22 @@ import android.widget.TextView;
 
 public class Preconfig extends AppCompatActivity {
 
+    private int codAlumno;
     private ScrollView scrollBinario;
     private TableLayout tableBinario;
     private Button btnJugar;
-    private SeekBar seekBar;
-    private TextView tvSeekBarProgres;
+    private SeekBar seekBarDictados, seekBarTempo;
+    private TextView tvSeekBarDictados, tvSeekBarTempo;
+    private final int minValue = 90, maxValue = 140, intervalo = 10;
+    private final int numIntervalos = (maxValue - minValue) / intervalo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preconfig);
+
+        Bundle b = getIntent().getExtras();
+        codAlumno = b.getInt("codAlumno");
 
         scrollBinario = findViewById(R.id.scroll_binario);
         scrollBinario.setVisibility(View.VISIBLE);
@@ -34,25 +40,59 @@ public class Preconfig extends AppCompatActivity {
 
         tableBinario = findViewById(R.id.table_bin);
 
-        tvSeekBarProgres = findViewById(R.id.tv_seekBar);
-        tvSeekBarProgres.setText("1");
-        seekBar = findViewById(R.id.seekBar_Dictado);
+        tvSeekBarDictados = findViewById(R.id.tv_seekBar_dictado);
+        tvSeekBarDictados.setText("1");
+        seekBarDictados = findViewById(R.id.seekBar_Dictado);
 
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekBarDictados.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) { /* TODO Auto-generated method stub */ }
+            public void onStopTrackingTouch(SeekBar seekBar) { }
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { /* TODO Auto-generated method stub */ }
+            public void onStartTrackingTouch(SeekBar seekBar) { }
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tvSeekBarProgres.setText(Integer.toString(progress));
+                tvSeekBarDictados.setText(Integer.toString(progress));
             }
         });
 
-        CrearImageButtonsFormulasRitmicas();
+        tvSeekBarTempo = findViewById(R.id.tv_seekBar_tempo);
+        tvSeekBarTempo.setText("90");
+        seekBarTempo = findViewById(R.id.seekBar_Tempo);
+        seekBarTempo.setMax(numIntervalos);
+
+        seekBarTempo.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                int valor = minValue + (progress * intervalo);
+                tvSeekBarTempo.setText(Integer.toString(valor));
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+
+        CrearImageViewFormulasRitmicas();
+
+        btnJugar = findViewById(R.id.btnJugarConfig);
+        btnJugar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int tempo = Integer.parseInt(tvSeekBarTempo.getText().toString());
+                int dictados = Integer.parseInt(tvSeekBarDictados.getText().toString());
+                Intent i = new Intent(Preconfig.this, MiniJuego.class);
+                Bundle b = new Bundle();
+                b.putInt("tempo",tempo);
+                b.putInt("dictados", dictados);
+                b.putInt("codAlumno", codAlumno);
+                i.putExtras(b);
+                startActivity(i);
+            }
+        });
+
     }
 
-    private void CrearImageButtonsFormulasRitmicas() {
+    private void CrearImageViewFormulasRitmicas() {
         ImageView imageViewsFormulas[] = new ImageView[FormulasRitmicas.values().length];
         int elementosFilaActualBin = 0;
         TableRow rowBinActual = new TableRow(this);
@@ -79,7 +119,7 @@ public class Preconfig extends AppCompatActivity {
 
             //Lo añadimos al scroll correspondiente
 
-                rowBinActual.addView(imageViewsFormulas[i]); //Aqui añadimos el objeto creado (IV)
+                rowBinActual.addView(imageViewsFormulas[i]); //Aqui añadimos el objeto creado IV (ImageView)
                 elementosFilaActualBin++;
                 if (elementosFilaActualBin == formulasPorFila) { //Añadimos la fila completa a la tabla y creamos otra
                     tableBinario.addView(rowBinActual);
@@ -97,11 +137,6 @@ public class Preconfig extends AppCompatActivity {
     public int ConvertirDP2PX(float dp) {
         Resources r = this.getResources();
         return (int) Math.floor(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-    }
-
-    public void jugar(View view){
-        Intent i = new Intent(this, MiniJuego.class);
-        startActivity(i);
     }
 
     public void volverPreConfig(View view){ finish(); }
