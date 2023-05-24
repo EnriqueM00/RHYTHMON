@@ -49,13 +49,13 @@ public class GestionCentro extends AppCompatActivity {
     }
 
     public void abrirEliminarAlumnos(View view){
-        /*Intent i = new Intent(this, EliminarAlumnos.class);
+        Intent i = new Intent(this, EliminarAlumno.class);
 
         Bundle b = new Bundle();
         b.putInt("codCentro", codCentro);
         i.putExtras(b);
 
-        startActivity(i);*/
+        startActivity(i);
     }
 
     public void volverGestionCentro(View view){ finish(); }

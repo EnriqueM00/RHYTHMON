@@ -23,7 +23,7 @@ public class Preconfig extends AppCompatActivity {
     private Button btnJugar;
     private SeekBar seekBarDictados, seekBarTempo;
     private TextView tvSeekBarDictados, tvSeekBarTempo;
-    private final int minValue = 90, maxValue = 140, intervalo = 10;
+    private final int minValue = 60, maxValue = 120, intervalo = 10;
     private final int numIntervalos = (maxValue - minValue) / intervalo;
 
     @Override
@@ -56,7 +56,7 @@ public class Preconfig extends AppCompatActivity {
         });
 
         tvSeekBarTempo = findViewById(R.id.tv_seekBar_tempo);
-        tvSeekBarTempo.setText("90");
+        tvSeekBarTempo.setText("60");
         seekBarTempo = findViewById(R.id.seekBar_Tempo);
         seekBarTempo.setMax(numIntervalos);
 
@@ -72,7 +72,7 @@ public class Preconfig extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) { }
         });
 
-        CrearImageViewFormulasRitmicas();
+        crearImageViewFormulasRitmicas();
 
         btnJugar = findViewById(R.id.btnJugarConfig);
         btnJugar.setOnClickListener(new View.OnClickListener() {
@@ -87,18 +87,19 @@ public class Preconfig extends AppCompatActivity {
                 b.putInt("codAlumno", codAlumno);
                 i.putExtras(b);
                 startActivity(i);
+
             }
         });
 
     }
 
-    private void CrearImageViewFormulasRitmicas() {
+    private void crearImageViewFormulasRitmicas() {
         ImageView imageViewsFormulas[] = new ImageView[FormulasRitmicas.values().length];
         int elementosFilaActualBin = 0;
         TableRow rowBinActual = new TableRow(this);
         rowBinActual.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT));
         //Mitad del width screen (cada scroll la mitad) dividido entre lo que ocupa cada botón formula con margenes
-        int formulasPorFila =  (int) (float)(this.getResources().getDisplayMetrics().widthPixels) / ConvertirDP2PX(80);
+        int formulasPorFila =  (int) (float)(this.getResources().getDisplayMetrics().widthPixels) / convertirDP2PX(80);
 
         for (int i = 0; i < FormulasRitmicas.values().length; i++) {
             FormulasRitmicas f = FormulasRitmicas.values()[i]; //Formula
@@ -109,8 +110,8 @@ public class Preconfig extends AppCompatActivity {
             imageViewsFormulas[i].setImageResource(idDrawable);
             imageViewsFormulas[i].setScaleType(ImageView.ScaleType.CENTER_INSIDE); //FIT_CENTER
             imageViewsFormulas[i].setAdjustViewBounds(true);
-            TableRow.LayoutParams lp = new TableRow.LayoutParams(ConvertirDP2PX(50), ConvertirDP2PX(50));
-            int margin = ConvertirDP2PX(15);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(convertirDP2PX(50), convertirDP2PX(50));
+            int margin = convertirDP2PX(15);
             lp.setMargins(margin, margin, margin, margin);
             imageViewsFormulas[i].setLayoutParams(lp);
 
@@ -134,7 +135,7 @@ public class Preconfig extends AppCompatActivity {
             tableBinario.addView(rowBinActual);
     }
 
-    public int ConvertirDP2PX(float dp) {
+    public int convertirDP2PX(float dp) {
         Resources r = this.getResources();
         return (int) Math.floor(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
