@@ -1,6 +1,7 @@
 package com.example.rhythmon;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 
 import android.content.res.Resources;
@@ -19,9 +20,9 @@ import java.util.Random;
 
 public class MiniJuego extends AppCompatActivity {
 
-    private RelativeLayout layoutActual;
+    private ConstraintLayout layoutActual;
     private ImageView ivLineaCompas;
-    private int codAlumno, tempo, dictados, dictadoActual;
+    private int codAlumno, tempo, dictados;
     private final int PARTES_COMPAS = 4;
     private final int COMPAS_LENGTH = 4;
     private final int[] valores = {1, -2, 2, -3, 3, -4, 4};
@@ -69,10 +70,10 @@ public class MiniJuego extends AppCompatActivity {
     }
 
     private List<ImageView> dibujarFigurasRitmicas(List<Integer> listaIdsImagenes, Compas c){
-        List<ImageView> ivNotasPintadas = new ArrayList<ImageView>();
+        List<ImageView> ivNotasPintadas = new ArrayList<>();
         float dpInicioX = findViewById(R.id.ivBarraGruesa).getX();
-        double tamaño1Compas = (findViewById(R.id.ivBarraDoble).getX() - findViewById(R.id.ivBarraGruesa).getX()) / 2;
-        double tamaño1Parte = tamaño1Compas / PARTES_COMPAS;
+        double tamañoUnCompas = (findViewById(R.id.ivBarraDoble).getX() - dpInicioX) / 2;
+        double tamañoUnaParte = tamañoUnCompas / PARTES_COMPAS;
 
         for (int i = 0; i < listaIdsImagenes.size();i++){
             int figuraDrawable = listaIdsImagenes.get(i);
@@ -82,7 +83,7 @@ public class MiniJuego extends AppCompatActivity {
             ivFigura.setImageDrawable(getResources().getDrawable(figuraDrawable));
             ivFigura.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
-            RelativeLayout.LayoutParams lpFigura = new RelativeLayout.LayoutParams(20,40);
+            RelativeLayout.LayoutParams lpFigura;
 
             switch (valorFigura)
             {
@@ -101,7 +102,7 @@ public class MiniJuego extends AppCompatActivity {
             ivFigura.setX((dpInicioX));
             ivFigura.setY(((ivLineaCompas.getY()-ivLineaCompas.getHeight()) / 2));
             ivNotasPintadas.add(ivFigura);
-            double espacioOcupadoNota = traducirValor(valorFigura) * tamaño1Parte;
+            double espacioOcupadoNota = traducirValor(valorFigura) * tamañoUnaParte;
             dpInicioX += espacioOcupadoNota;
         }
         return ivNotasPintadas;
@@ -110,7 +111,7 @@ public class MiniJuego extends AppCompatActivity {
 
     public List<Integer> traducirCompases(Compas c){
         List<Integer> valores = c.getFiguras();
-        List<Integer> valoresDrawable = new ArrayList<Integer>();
+        List<Integer> valoresDrawable = new ArrayList<>();
         for (int i : valores){
             valoresDrawable.add(map.get(i));
         }
@@ -118,9 +119,9 @@ public class MiniJuego extends AppCompatActivity {
     }
 
     public List<Integer> generarValores(){
-        List<Integer> compas = new ArrayList<Integer>();
+        List<Integer> compas = new ArrayList<>();
         Random r = new Random();
-        int valor = 0;
+        int valor;
         int suma = 0;
         for (int i = 0; suma<COMPAS_LENGTH ; i++ ){
             valor = r.nextInt(valores.length);
@@ -165,12 +166,7 @@ public class MiniJuego extends AppCompatActivity {
             int traduccion = traducirValor(figura);
             suma += traduccion;
 
-            if (suma >= COMPAS_LENGTH){
-                return true;
-            }
-            else {
-                return false;
-            }
+            return suma >= COMPAS_LENGTH;
         }
         return false;
     }

@@ -302,10 +302,12 @@ public class ActualizarAlumnos extends AppCompatActivity {
                 c.moveToNext();
                 listaAlumnos.add(new Alumno(c.getInt(0),c.getString(1),c.getString(2),c.getString(3),c.getString(4),c.getInt(5),c.getInt(6)));
             }
+            c.close();
 
         }catch (Exception e){
             Toast.makeText(this, "No hay ningún alumno.", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     public void volverActualizarAlumnos(View view){ finish(); }

@@ -99,7 +99,7 @@ public class InicioCentro extends AppCompatActivity {
                 c.moveToNext();
                 listaCentros.add(new Centro(c.getInt(0),c.getString(1),c.getString(2),c.getString(3),c.getString(4),c.getInt(5)));
             }
-
+            c.close();
         }catch (Exception e){
             Toast.makeText(InicioCentro.this, "No hay ningún centro.", Toast.LENGTH_SHORT).show();
         }

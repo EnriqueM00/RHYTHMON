@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -83,9 +82,11 @@ public class EliminarAlumno extends AppCompatActivity {
                 c.moveToNext();
                 listaAlumnos.add(new Alumno(c.getInt(0),c.getString(1),c.getString(2),c.getString(3),c.getString(4),c.getInt(5),c.getInt(6)));
             }
-
+            c.close();
         }catch (Exception e){
             Toast.makeText(this, "No hay ningún alumno.", Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void volverEliminarAlumnos(View view){ finish(); }
 }

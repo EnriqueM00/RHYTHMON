@@ -36,7 +36,7 @@ public class AdapterCentros extends RecyclerView.Adapter<AdapterCentros.ViewHold
         }
 
         // Clase ViewHolderDatos
-        public class ViewHolderDatos extends RecyclerView.ViewHolder{
+        public static class ViewHolderDatos extends RecyclerView.ViewHolder{
             //Declarar TextView
             private TextView tvCodCentro;
             private TextView tvNombreCentro;

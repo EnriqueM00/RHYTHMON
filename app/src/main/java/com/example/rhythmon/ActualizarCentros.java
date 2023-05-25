@@ -305,7 +305,7 @@ public class ActualizarCentros extends AppCompatActivity {
                 // Añadimos los datos al arrayList global
                 listaCentro.add(new Centro(c.getInt(0),c.getString(1),c.getString(2), c.getString(3),c.getString(4),c.getInt(5)));
             }
-
+            c.close();
         }catch (Exception e){
             Toast.makeText(this, "Ocurrió un error al encontrar centros.", Toast.LENGTH_SHORT).show();
         }

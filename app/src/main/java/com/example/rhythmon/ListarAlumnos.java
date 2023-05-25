@@ -68,7 +68,7 @@ public class ListarAlumnos extends AppCompatActivity {
                 c.moveToNext();
                 listaAlumnos.add(new Alumno(c.getString(0),c.getString(1),c.getString(2),c.getString(3),c.getInt(4),c.getInt(5)));
             }
-
+            c.close();
         }catch (Exception e){
             Toast.makeText(this, "No hay ningún alumno.", Toast.LENGTH_SHORT).show();
         }
