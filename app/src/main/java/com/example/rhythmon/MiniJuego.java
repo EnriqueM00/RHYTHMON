@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -36,7 +37,6 @@ public class MiniJuego extends AppCompatActivity {
         put(4,R.drawable.redonda);
     }};
     private Compas compas1, compas2;
-    private List<Integer> idImagenesCompas1, idImagenesCompas2;
     private List<ImageView> listaFigurasDraw1, listaFigurasDraw2;
     private TextView tvTempo, tvDictados;
 
@@ -62,21 +62,29 @@ public class MiniJuego extends AppCompatActivity {
         compas1 = generarCompas();
         compas2 = generarCompas();
 
-        idImagenesCompas1 = traducirCompases(compas1);
-        idImagenesCompas2 = traducirCompases(compas2);
 
-        listaFigurasDraw1 = dibujarFigurasRitmicas(idImagenesCompas1, compas1);
-        listaFigurasDraw2 = dibujarFigurasRitmicas(idImagenesCompas2, compas2);
+
+        layoutActual.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        listaFigurasDraw1 = dibujarFigurasRitmicas(compas1, compas2);
+                        layoutActual.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                });
+
     }
 
-    private List<ImageView> dibujarFigurasRitmicas(List<Integer> listaIdsImagenes, Compas c){
+    private List<ImageView> dibujarFigurasRitmicas( Compas c, Compas c2){
+        List<Integer> idImagenesCompas1 = traducirCompases(c);
+        List<Integer> idImagenesCompas2 = traducirCompases(c2);
         List<ImageView> ivNotasPintadas = new ArrayList<>();
         float dpInicioX = findViewById(R.id.ivBarraGruesa).getX();
         double tamañoUnCompas = (findViewById(R.id.ivBarraDoble).getX() - dpInicioX) / 2;
         double tamañoUnaParte = tamañoUnCompas / PARTES_COMPAS;
 
-        for (int i = 0; i < listaIdsImagenes.size();i++){
-            int figuraDrawable = listaIdsImagenes.get(i);
+        for (int i = 0; i < idImagenesCompas1.size();i++){
+            int figuraDrawable = idImagenesCompas1.get(i);
             int valorFigura = c.getFiguras().get(i);
 
             ImageView ivFigura = new ImageView(this);
@@ -87,7 +95,11 @@ public class MiniJuego extends AppCompatActivity {
 
             switch (valorFigura)
             {
-                case -2:
+                case 1:{
+                    lpFigura = new RelativeLayout.LayoutParams(convertirDP2PX(40), convertirDP2PX(60));
+                    break;
+                }
+                case -3:
                 case -4:{
                     lpFigura = new RelativeLayout.LayoutParams(convertirDP2PX(40), convertirDP2PX(20));
                     break;
@@ -99,8 +111,42 @@ public class MiniJuego extends AppCompatActivity {
             }
             layoutActual.requestLayout();
             layoutActual.addView(ivFigura, lpFigura);
-            ivFigura.setX((dpInicioX));
-            ivFigura.setY(((ivLineaCompas.getY()-ivLineaCompas.getHeight()) / 2));
+            ivFigura.setX((dpInicioX + convertirDP2PX(15)));
+            ivFigura.setY(ivLineaCompas.getY() + (ivLineaCompas.getHeight() / 2));
+            ivNotasPintadas.add(ivFigura);
+            double espacioOcupadoNota = traducirValor(valorFigura) * tamañoUnaParte;
+            dpInicioX += espacioOcupadoNota;
+        }
+        for (int i = 0; i < idImagenesCompas2.size();i++){
+            int figuraDrawable = idImagenesCompas2.get(i);
+            int valorFigura = c2.getFiguras().get(i);
+
+            ImageView ivFigura = new ImageView(this);
+            ivFigura.setImageDrawable(getResources().getDrawable(figuraDrawable));
+            ivFigura.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+            RelativeLayout.LayoutParams lpFigura;
+
+            switch (valorFigura)
+            {
+                case 1:{
+                    lpFigura = new RelativeLayout.LayoutParams(convertirDP2PX(40), convertirDP2PX(60));
+                    break;
+                }
+                case -3:
+                case -4:{
+                    lpFigura = new RelativeLayout.LayoutParams(convertirDP2PX(40), convertirDP2PX(20));
+                    break;
+                }
+                default:{
+                    lpFigura = new RelativeLayout.LayoutParams(convertirDP2PX(20), convertirDP2PX(40));
+                    break;
+                }
+            }
+            layoutActual.requestLayout();
+            layoutActual.addView(ivFigura, lpFigura);
+            ivFigura.setX((dpInicioX + convertirDP2PX(15)));
+            ivFigura.setY(ivLineaCompas.getY() + (ivLineaCompas.getHeight() / 2));
             ivNotasPintadas.add(ivFigura);
             double espacioOcupadoNota = traducirValor(valorFigura) * tamañoUnaParte;
             dpInicioX += espacioOcupadoNota;
