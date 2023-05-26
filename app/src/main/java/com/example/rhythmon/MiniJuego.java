@@ -80,6 +80,7 @@ public class MiniJuego extends AppCompatActivity {
         List<Integer> idImagenesCompas2 = traducirCompases(c2);
         List<ImageView> ivNotasPintadas = new ArrayList<>();
         float dpInicioX = findViewById(R.id.ivBarraGruesa).getX();
+        float dpInicial = dpInicioX;
         double tamañoUnCompas = (findViewById(R.id.ivBarraDoble).getX() - dpInicioX) / 2;
         double tamañoUnaParte = tamañoUnCompas / PARTES_COMPAS;
 
@@ -111,8 +112,37 @@ public class MiniJuego extends AppCompatActivity {
             }
             layoutActual.requestLayout();
             layoutActual.addView(ivFigura, lpFigura);
-            ivFigura.setX((dpInicioX + convertirDP2PX(15)));
-            ivFigura.setY(ivLineaCompas.getY() + (ivLineaCompas.getHeight() / 2));
+            if (dpInicioX == dpInicial){
+                ivFigura.setX((dpInicioX + convertirDP2PX(20)));
+            }
+            else {
+                ivFigura.setX(dpInicioX + convertirDP2PX(10));
+            }
+            switch (valorFigura){
+                case 1:{
+                    ivFigura.setY(ivLineaCompas.getY() - convertirDP2PX(11));
+                    break;
+                }
+                case -2:{
+                    ivFigura.setY(ivLineaCompas.getY() + convertirDP2PX(3));
+                    break;
+                }
+                case 2:
+                case 3:{
+                    ivFigura.setY(ivLineaCompas.getY() - convertirDP2PX(3));
+                    break;
+                }
+                case -3:{
+                }
+                case -4:{
+                    ivFigura.setY(ivLineaCompas.getY() + convertirDP2PX(16));
+                    break;
+                }
+                case 4:{
+                    ivFigura.setY(ivLineaCompas.getY() + convertirDP2PX(12));
+                }
+            }
+
             ivNotasPintadas.add(ivFigura);
             double espacioOcupadoNota = traducirValor(valorFigura) * tamañoUnaParte;
             dpInicioX += espacioOcupadoNota;
@@ -145,8 +175,37 @@ public class MiniJuego extends AppCompatActivity {
             }
             layoutActual.requestLayout();
             layoutActual.addView(ivFigura, lpFigura);
-            ivFigura.setX((dpInicioX + convertirDP2PX(15)));
-            ivFigura.setY(ivLineaCompas.getY() + (ivLineaCompas.getHeight() / 2));
+            if (dpInicioX == dpInicial){
+                ivFigura.setX((dpInicioX + convertirDP2PX(20)));
+            }
+            else {
+                ivFigura.setX(dpInicioX + convertirDP2PX(10));
+            }
+            switch (valorFigura){
+                case 1:{
+                    ivFigura.setY(ivLineaCompas.getY() - convertirDP2PX(11));
+                    break;
+                }
+                case -2:{
+                    ivFigura.setY(ivLineaCompas.getY() + convertirDP2PX(3));
+                    break;
+                }
+                case 2:
+                case 3:{
+                    ivFigura.setY(ivLineaCompas.getY() - convertirDP2PX(3));
+                    break;
+                }
+                case -3:{
+                }
+                case -4:{
+                    ivFigura.setY(ivLineaCompas.getY() + convertirDP2PX(16));
+                    break;
+                }
+                case 4:{
+                    ivFigura.setY(ivLineaCompas.getY() + convertirDP2PX(12));
+                }
+            }
+
             ivNotasPintadas.add(ivFigura);
             double espacioOcupadoNota = traducirValor(valorFigura) * tamañoUnaParte;
             dpInicioX += espacioOcupadoNota;
