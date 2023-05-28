@@ -2,17 +2,20 @@ package com.example.rhythmon;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-
-
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
+import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import android.media.SoundPool;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,13 +24,18 @@ import java.util.Random;
 
 public class MiniJuego extends AppCompatActivity {
 
+    private Handler masterHandler; //Manejador de hilos
     private ConstraintLayout layoutActual;
-    private ImageView ivLineaCompas;
-    private int codAlumno, tempo, dictados;
+    private ImageView ivLineaCompas,ivLineaGuia;
+    private SoundPool sp;
+    private ImageButton btnPlay, btnPulsador;
+    private Long tiempoInicioDictado;
+    private int puntuacion = 0;
+    private int codAlumno, tempo, dictados, duraciónPulso, idSonido, contador;
     private final int PARTES_COMPAS = 4;
     private final int COMPAS_LENGTH = 4;
     private final int[] valores = {1, -2, 2, -3, 3, -4, 4};
-    public final Map<Integer, Integer> map = new HashMap<Integer, Integer>() {{
+    private final Map<Integer, Integer> map = new HashMap<Integer, Integer>() {{
         put(1,R.drawable.corcheas);
         put(-2,R.drawable.silencio_negra);
         put(2,R.drawable.negra);
@@ -36,28 +44,44 @@ public class MiniJuego extends AppCompatActivity {
         put(-4,R.drawable.silencio_redonda);
         put(4,R.drawable.redonda);
     }};
+    private List<Long> listaTiemposPulsador = new ArrayList<>();
     private Compas compas1, compas2;
-    private List<ImageView> listaFigurasDraw1, listaFigurasDraw2;
-    private TextView tvTempo, tvDictados;
+    private CheckBox checkBoxLineaGuia;
+    private List<ImageView> listaFigurasDraw1;
+    private TextView tvTempo, tvDictados, tvCuentaAtras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mini_juego);
 
+        masterHandler = new Handler();
+        sp = new SoundPool.Builder().build();
+        idSonido = sp.load(this, R.raw.golpe_metronomo, 1);
+        //sp.play(idSonido, 1, 1, 1, 0, 0);
+
         Bundle b = getIntent().getExtras();
         codAlumno = b.getInt("codAlumno");
         tempo = b.getInt("tempo");
         dictados = b.getInt("dictados");
 
+        duraciónPulso = 60000 / tempo; // el resultado en milisegundos
+
         tvDictados = findViewById(R.id.tvNumDictados);
         tvTempo = findViewById(R.id.tv_Tempo);
+        tvCuentaAtras = findViewById(R.id.tvCuentaAtras);
+        checkBoxLineaGuia = findViewById(R.id.checkBoxLineaAyuda);
 
         tvTempo.setText("=  " + String.valueOf(tempo));
         tvDictados.setText("Nº " + String.valueOf(dictados));
 
         layoutActual = findViewById(R.id.layoutCompas);
         ivLineaCompas = findViewById(R.id.ivBarraCompas);
+        ivLineaGuia = findViewById(R.id.ivLineaGuia);
+
+        btnPlay = findViewById(R.id.btnPlayMinijuego);
+        btnPulsador = findViewById(R.id.btnPulsador);
+        btnPulsador.setEnabled(false);
 
         compas1 = generarCompas();
         compas2 = generarCompas();
@@ -73,7 +97,131 @@ public class MiniJuego extends AppCompatActivity {
                     }
                 });
 
+
+
     }
+
+    public void btnPulsador(View view){
+        sp.play(idSonido, 1, 1, 1, 0, 0);
+        listaTiemposPulsador.add(System.currentTimeMillis());
+    }
+
+    public void btnPlay(View view){
+        contador = 3;
+        masterHandler.post(hiloCuenta);
+        masterHandler.postDelayed(hiloCuenta, duraciónPulso); //Imprime el 2
+        masterHandler.postDelayed(hiloCuenta, 2 * duraciónPulso); //Imprime el 1
+        masterHandler.postDelayed(hiloCuenta, 3 * duraciónPulso); //Imprime el 0
+    }
+
+    private void comprobarDictado(){
+        // CREAMOS LA LISTA DE VALORES DE TIEMPO QUE DEBERIAN HABER TOMADO LAS PULSACIONES
+        List<Long> pulsacionesPerfectas = new ArrayList<>();
+        long tiempo = 0;
+        for (int figura :compas1.getFiguras()){
+            if (figura > 0){
+                pulsacionesPerfectas.add(tiempo);
+                if (figura == 1){
+                    pulsacionesPerfectas.add((long) (duraciónPulso/2));
+                }
+            }
+            tiempo += (traducirValor(figura) * duraciónPulso);
+        }
+        for (int figura :compas2.getFiguras()){
+            if (figura > 0){
+                pulsacionesPerfectas.add(tiempo);
+                if (figura == 1){
+                    pulsacionesPerfectas.add(tiempo + (duraciónPulso/2));
+                }
+            }
+            tiempo += (traducirValor(figura) * duraciónPulso);
+        }
+
+        // REDUCIMOS TIEMPO DE LAS PULSACIONES, QUITANDO EL VALOR INICIAL
+        for (int i = 0; i<listaTiemposPulsador.size(); i++)
+            listaTiemposPulsador.set(i, (listaTiemposPulsador.get(i) - tiempoInicioDictado) );
+
+        // RECORREMOS LAS DOS LISTAS COMPARANDO LA LONGITUD DE LAS LISTAS Y SU RESPECTIVOS VALORES, HACIENDO UN BAREMO DE LA PRECISION DE LAS PULSACIONES
+        if (pulsacionesPerfectas.size() == listaTiemposPulsador.size()){
+            puntuacion += 100;
+        }
+        else{
+            int numeroErrores = Math.abs((pulsacionesPerfectas.size() - listaTiemposPulsador.size()));
+            puntuacion -= (numeroErrores * 50);
+            List<Long> listaTiemposPulsadorAprox = new ArrayList<>();
+            for (long tPulsacion : pulsacionesPerfectas){
+                long mejorDiferencia = 8 * duraciónPulso;
+                long tiempoEscogido = 0;
+                for (long tPulsacionAlumno : listaTiemposPulsador){
+                    if (mejorDiferencia > Math.abs((tPulsacion - tPulsacionAlumno))){
+                        mejorDiferencia = Math.abs((tPulsacion - tPulsacionAlumno));
+                        tiempoEscogido = tPulsacionAlumno;
+                    }
+                }
+                listaTiemposPulsadorAprox.add(tiempoEscogido);
+            }
+
+        }
+    }
+
+    private void moverBarra(){
+        float tamañoDictado = (findViewById(R.id.ivBarraDoble).getX() - findViewById(R.id.ivBarraGruesa).getX());
+        TranslateAnimation moverDerecha = new TranslateAnimation( 0 , tamañoDictado, 0, 0);
+        //Desde la posicion donde está hasta el inicio de la clave de sol
+        moverDerecha.setDuration(duraciónPulso * 8);//Duracion 2 compases
+        moverDerecha.setFillAfter(true);//Tiene que estar
+        moverDerecha.setInterpolator(new LinearInterpolator());
+        ivLineaGuia.startAnimation(moverDerecha);
+    }
+
+
+    private void cambiarHabilitacionBotones(){  //Boton Play, Pulsador y CheckBox. Play y Checkbox van a la vez. Y al contrario que Pulsador
+        if (checkBoxLineaGuia.isEnabled()){
+            checkBoxLineaGuia.setEnabled(false);
+            btnPlay.setEnabled(false);
+        }
+        else {
+            checkBoxLineaGuia.setEnabled(true);
+            btnPlay.setEnabled(true);
+            btnPulsador.setEnabled(false);
+        }
+    }
+
+    private void cuentaAtras(){
+        if (contador == 3){
+            cambiarHabilitacionBotones();
+            masterHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    cambiarHabilitacionBotones();
+                    comprobarDictado();
+                }
+            },duraciónPulso * 11); //Por 11 por 8 del compas + 3 de espera
+        }
+        sp.play(idSonido, 1, 1, 1, 0, 0);
+        if (contador == 0){
+            btnPulsador.setEnabled(true);
+            tvCuentaAtras.setText("");
+            masterHandler.removeCallbacks(hiloCuenta);
+            if (checkBoxLineaGuia.isChecked()){
+                checkBoxLineaGuia.setEnabled(false);
+                moverBarra();
+            }
+            tiempoInicioDictado = System.currentTimeMillis();
+        }
+        else{
+            tvCuentaAtras.setText("\n " + contador);
+        }
+        contador--;
+    }
+
+    Runnable hiloCuenta = new Runnable() { //
+        @Override
+        public void run() {
+            cuentaAtras();
+        }
+    };
+
 
     private List<ImageView> dibujarFigurasRitmicas( Compas c, Compas c2){
         List<Integer> idImagenesCompas1 = traducirCompases(c);
