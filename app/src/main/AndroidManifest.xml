@@ -13,7 +13,7 @@
         android:theme="@style/Theme.RHYTHMON"
         tools:targetApi="31">
         <activity
-            android:name=".MiniJuego"
+            android:name="MiniJuego.MiniJuego"
             android:exported="false"
             android:screenOrientation="landscape"
             android:configChanges="orientation|keyboardHidden|screenSize">
@@ -22,7 +22,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".Preconfig"
+            android:name="MiniJuego.Preconfig"
             android:exported="false"
             android:screenOrientation="portrait">
             <meta-data
@@ -30,7 +30,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".EliminarAlumno"
+            android:name="CRUD_Users.EliminarAlumno"
             android:exported="false"
             android:screenOrientation="portrait">
             <meta-data
@@ -38,7 +38,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ActualizarAlumnos"
+            android:name="CRUD_Users.ActualizarAlumnos"
             android:exported="false"
             android:screenOrientation="portrait">
             <meta-data
@@ -46,7 +46,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".AddAlumnos"
+            android:name="CRUD_Users.AddAlumnos"
             android:exported="false"
             android:screenOrientation="portrait">
             <meta-data
@@ -54,7 +54,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ListarAlumnos"
+            android:name="CRUD_Users.ListarAlumnos"
             android:exported="false"
             android:screenOrientation="portrait">
             <meta-data
@@ -62,7 +62,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".EliminarCentros"
+            android:name="CRUD_Users.EliminarCentros"
             android:exported="false"
             android:screenOrientation="portrait">
             <meta-data
@@ -70,7 +70,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ActualizarCentros"
+            android:name="CRUD_Users.ActualizarCentros"
             android:exported="false"
             android:screenOrientation="portrait">
             <meta-data
@@ -78,7 +78,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".AddCentros"
+            android:name="CRUD_Users.AddCentros"
             android:exported="false"
             android:screenOrientation="portrait">
             <meta-data

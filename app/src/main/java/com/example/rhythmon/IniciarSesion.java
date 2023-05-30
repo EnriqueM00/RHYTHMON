@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+// CLASE "InicioSesion"
 public class IniciarSesion extends AppCompatActivity {
 
     @Override
@@ -15,17 +16,35 @@ public class IniciarSesion extends AppCompatActivity {
 
     }
 
+    /*
+     *
+     * @param view
+     *
+     */
+    // Metodo para abrir "InicioCentro"
     public void inicioCentro(View view){
         Intent i = new Intent(this,InicioCentro.class);
         startActivity(i);
     }
 
+    /*
+     *
+     * @param view
+     *
+     */
+    // Metodo para abrir "InicioUsuario"
     public void inicioUsuario(View view){
         Intent i = new Intent(this,InicioUsuario.class);
         startActivity(i);
     }
 
-    public void salir(View view){
+    /*
+     *
+     * @param view
+     *
+     */
+    // Metodo para volver a la Activity anterior y cerrar la actual
+    public void volverInicioSesion(View view){
         finish();
     }
 }

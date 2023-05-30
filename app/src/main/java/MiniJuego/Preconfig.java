@@ -1,4 +1,4 @@
-package com.example.rhythmon;
+package MiniJuego;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
@@ -15,6 +15,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.example.rhythmon.R;
+
 public class Preconfig extends AppCompatActivity {
 
     private int codAlumno;
@@ -23,8 +25,8 @@ public class Preconfig extends AppCompatActivity {
     private Button btnJugar;
     private SeekBar seekBarDictados, seekBarTempo;
     private TextView tvSeekBarDictados, tvSeekBarTempo;
-    private final int minValue = 60, maxValue = 120, intervalo = 10;
-    private final int numIntervalos = (maxValue - minValue) / intervalo;
+    private final int MIN_VALUE = 60, MAX_VALUE = 120, INTERVALO = 10;
+    private final int NUM_INTERVALOS = (MAX_VALUE - MIN_VALUE) / INTERVALO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +60,12 @@ public class Preconfig extends AppCompatActivity {
         tvSeekBarTempo = findViewById(R.id.tv_seekBar_tempo);
         tvSeekBarTempo.setText("60");
         seekBarTempo = findViewById(R.id.seekBar_Tempo);
-        seekBarTempo.setMax(numIntervalos);
+        seekBarTempo.setMax(NUM_INTERVALOS);
 
         seekBarTempo.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                int valor = minValue + (progress * intervalo);
+                int valor = MIN_VALUE + (progress * INTERVALO);
                 tvSeekBarTempo.setText(Integer.toString(valor));
             }
             @Override
@@ -94,11 +96,12 @@ public class Preconfig extends AppCompatActivity {
     }
 
     private void crearImageViewFormulasRitmicas() {
+        //
         ImageView imageViewsFormulas[] = new ImageView[FormulasRitmicas.values().length];
         int elementosFilaActualBin = 0;
         TableRow rowBinActual = new TableRow(this);
         rowBinActual.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT));
-        //Mitad del width screen (cada scroll la mitad) dividido entre lo que ocupa cada botón formula con margenes
+        //
         int formulasPorFila =  (int) (float)(this.getResources().getDisplayMetrics().widthPixels) / convertirDP2PX(80);
 
         for (int i = 0; i < FormulasRitmicas.values().length; i++) {

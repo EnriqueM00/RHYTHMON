@@ -1,16 +1,20 @@
-package com.example.rhythmon;
+package Clases_BBDD;
 
+// CLASE PUNTUACION
 public class Puntuacion {
 
-    private int codPuntuacion, codAlumno;
-    private double puntuacion;
+    //variables globales
+    private int codPuntuacion, codAlumno;  //Declaramos los enteros que necesitemos
+    private double puntuacion; //Declaramos un double para la puntuación
 
+    // Constructor de la clase
     public Puntuacion (int codPuntuacion, double puntuacion, int codAlumno){
         this.codPuntuacion = codPuntuacion;
         this.puntuacion = puntuacion;
         this.codAlumno = codAlumno;
     }
 
+    // GETTERS Y SETTERS
     public int getCodPuntuacion(){ return codPuntuacion; }
 
     public double getPuntuacion(){ return puntuacion; }

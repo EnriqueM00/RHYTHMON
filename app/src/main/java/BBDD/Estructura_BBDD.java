@@ -1,7 +1,9 @@
-package com.example.rhythmon;
+package BBDD;
 
 // Clase Estructura_BBDD
 public class Estructura_BBDD {
+
+    //Variables globales (todo es final porque no cambia nunca)
 
     // Nombre Tabla BD
     public static final String TABLE_CENTROS = "Centro";

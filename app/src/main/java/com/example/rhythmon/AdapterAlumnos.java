@@ -7,6 +7,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
+import Clases_BBDD.Alumno;
+
 public class AdapterAlumnos extends RecyclerView.Adapter<AdapterAlumnos.ViewHolderDatos> {
 
     private ArrayList<Alumno> listaAlumnos;

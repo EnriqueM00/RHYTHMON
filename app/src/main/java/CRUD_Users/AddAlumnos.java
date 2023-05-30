@@ -1,4 +1,4 @@
-package com.example.rhythmon;
+package CRUD_Users;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,40 +10,54 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.rhythmon.R;
+
+import BBDD.BBDD_Helper;
+import BBDD.Estructura_BBDD;
+
+// CLASE "AddAlumnos"
 public class AddAlumnos extends AppCompatActivity {
 
-    private EditText nombre, apellidos, id_user, contraseña, anios;
-    private int codCentro;
-    private Button btnAdd;
-    private BBDD_Helper helper = new BBDD_Helper(this);
+    // Variables globales
+    private EditText nombre, apellidos, id_user, contraseña, anios; // Declaramos los EditText que referencian los campos que se van a añadir
+    private int codCentro; // Declaramos el codCentro (foreign key) para saber a que centro hay que añadirlo
+    private Button btnAdd; // Declaramos el boton
+    private BBDD_Helper helper = new BBDD_Helper(this); //Inicializamos un objeto BBDD_Helper (gestionar BD)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_alumnos);
+        // Recuperamos los datos de la activity anterior
         Bundle b = getIntent().getExtras();
+        // Le asignamos el valor de la clave:codCentro
         codCentro = b.getInt("codCentro");
-
+        // Inicializamos los elementos necesarios para trabajar con la clase{
         nombre = findViewById(R.id.etNombreAddAlumno);
         apellidos = findViewById(R.id.etApellidosAddAlumno);
         id_user = findViewById(R.id.etIDUserAddAlumno);
         contraseña = findViewById(R.id.etPasswordAddAlumno);
         anios = findViewById(R.id.etAniosAddAlumno);
-
         btnAdd = findViewById(R.id.btnAddAlumno);
+        //}
+        // seteamos un escuchador de Clicks al boton "btnAdd"
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
+            // ACCION DEL BOTON:
+            // Comprobar si hay algun campo vacio (todas las combinaciones posibles) si es asi nos muestra un aviso de que campos nos faltan por
+            // introducir y si no falta ninguno nos añade el Alumno que hayamos facilitado
             public void onClick(View view) {
-                SQLiteDatabase db = helper.getWritableDatabase();
-
+                // Instanciamos un objeto ContentValues para añadir los valores que se van a actualizar y referenciarlos con una columna
                 ContentValues values = new ContentValues();
-
+                // Comprobación de todas las posibles combinaciones de campos vacios y finalización con el caso de que todos estan rellenos
                 if (nombre.getText().toString().isEmpty() && apellidos.getText().toString().isEmpty() && id_user.getText().toString().isEmpty()
                         && contraseña.getText().toString().isEmpty() && anios.getText().toString().isEmpty()) {
+                    // Muestra un aviso si no has rellenado ningun campo
                     Toast.makeText(AddAlumnos.this, "No has rellenado los campos requeridos.", Toast.LENGTH_SHORT).show();
                 }
                 else if (id_user.getText().toString().isEmpty() && contraseña.getText().toString().isEmpty()
                         && apellidos.getText().toString().isEmpty() && anios.getText().toString().isEmpty()) {
+                    // Muestra un aviso con los campos que no rellenamos
                     Toast.makeText(AddAlumnos.this, "No has rellenado: apellidos, id_user, contraseña, años.", Toast.LENGTH_SHORT).show();
                 }
                 else if (nombre.getText().toString().isEmpty() && id_user.getText().toString().isEmpty()
@@ -149,6 +163,8 @@ public class AddAlumnos extends AppCompatActivity {
                         Toast.makeText(AddAlumnos.this, "No has rellenado: años.", Toast.LENGTH_SHORT).show();
                     }
                     else {
+                        // Creamos un objeto SQLiteDatabase que igualaremos a al BBDD_Helper para poder leer en la BD
+                        SQLiteDatabase db = helper.getWritableDatabase();
                         // En este punto, todos los campos están llenos.
                         // Le damos el valor de los EditText a los values que vamos a insertar
                         values.put(Estructura_BBDD.NOMBRE_ALUMNO, nombre.getText().toString());
@@ -173,5 +189,12 @@ public class AddAlumnos extends AppCompatActivity {
         });
     }
 
+    /*
+    *
+    *
+    * @param view
+    *
+     */
+    // Metodo para volver a la pagina anterior y cerrar esta
     public void volverAddAlumnos(View view){ finish(); }
 }

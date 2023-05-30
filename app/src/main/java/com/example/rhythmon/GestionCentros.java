@@ -6,6 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import CRUD_Users.ActualizarCentros;
+import CRUD_Users.AddCentros;
+import CRUD_Users.EliminarCentros;
+
+// CLASE "GestionCentros"
 public class GestionCentros extends AppCompatActivity {
 
     @Override
@@ -14,20 +19,44 @@ public class GestionCentros extends AppCompatActivity {
         setContentView(R.layout.activity_gestion_centros);
     }
 
+    /*
+     *
+     * @param view
+     *
+     */
+    // Metodo para abrir "AddCentros"
     public void añadirCentros(View view){
-        Intent i = new Intent(this,AddCentros.class);
+        Intent i = new Intent(this, AddCentros.class);
         startActivity(i);
     }
 
+    /*
+     *
+     * @param view
+     *
+     */
+    // Metodo para abrir "ActualizarCentros"
     public void actualizarCentros(View view){
         Intent i = new Intent(this, ActualizarCentros.class);
         startActivity(i);
     }
 
+    /*
+     *
+     * @param view
+     *
+     */
+    // Metodo para abrir "EliminarCentros"
     public void eliminarCentros(View view){
         Intent i = new Intent(this, EliminarCentros.class);
         startActivity(i);
     }
 
+    /*
+     *
+     * @param view
+     *
+     */
+    // Metodo para volver a la Activity anterio y cerrar la actual
     public void volverGestionCentros(View view){ finish(); }
 }

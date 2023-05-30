@@ -1,7 +1,9 @@
-package com.example.rhythmon;
+package MiniJuego;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,11 +18,16 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.media.SoundPool;
+
+import com.example.rhythmon.R;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import Clases_BBDD.Puntuacion;
 
 public class MiniJuego extends AppCompatActivity {
 
@@ -30,13 +37,13 @@ public class MiniJuego extends AppCompatActivity {
     private SoundPool sp;
     private ImageButton btnPlay, btnPulsador;
     private Long tiempoInicioDictado;
-    private int puntuacion = 0;
-    private int codAlumno, tempo, dictados, duraciónPulso, idSonido, contador;
+    private double puntuacion = 0;
+    private int codAlumno, tempo, dictados, duraciónPulso, idSonido, contador, dictadoActual;
     private final int PARTES_COMPAS = 4;
     private final int COMPAS_LENGTH = 4;
     private final int[] valores = {1, -2, 2, -3, 3, -4, 4};
     private final Map<Integer, Integer> map = new HashMap<Integer, Integer>() {{
-        put(1,R.drawable.corcheas);
+        put(1, R.drawable.corcheas);
         put(-2,R.drawable.silencio_negra);
         put(2,R.drawable.negra);
         put(-3,R.drawable.silencio_blanca);
@@ -48,7 +55,7 @@ public class MiniJuego extends AppCompatActivity {
     private Compas compas1, compas2;
     private CheckBox checkBoxLineaGuia;
     private List<ImageView> listaFigurasDraw1;
-    private TextView tvTempo, tvDictados, tvCuentaAtras;
+    private TextView tvTempo, tvDictados, tvCuentaAtras, tvPuntuacion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +77,11 @@ public class MiniJuego extends AppCompatActivity {
         tvDictados = findViewById(R.id.tvNumDictados);
         tvTempo = findViewById(R.id.tv_Tempo);
         tvCuentaAtras = findViewById(R.id.tvCuentaAtras);
+        tvPuntuacion = findViewById(R.id.tvPuntuacion);
         checkBoxLineaGuia = findViewById(R.id.checkBoxLineaAyuda);
 
         tvTempo.setText("=  " + String.valueOf(tempo));
-        tvDictados.setText("Nº " + String.valueOf(dictados));
+        tvDictados.setText("Nº " + String.valueOf(dictadoActual));
 
         layoutActual = findViewById(R.id.layoutCompas);
         ivLineaCompas = findViewById(R.id.ivBarraCompas);
@@ -112,9 +120,16 @@ public class MiniJuego extends AppCompatActivity {
         masterHandler.postDelayed(hiloCuenta, duraciónPulso); //Imprime el 2
         masterHandler.postDelayed(hiloCuenta, 2 * duraciónPulso); //Imprime el 1
         masterHandler.postDelayed(hiloCuenta, 3 * duraciónPulso); //Imprime el 0
+        dictadoActual++;
     }
 
     private void comprobarDictado(){
+        // Comprobamos si no se dio ninguna pulsacion
+        if (listaTiemposPulsador.size() == 0){
+            dictadoActual--;
+            return; //El alumno solo observo el dictado
+        }
+
         // CREAMOS LA LISTA DE VALORES DE TIEMPO QUE DEBERIAN HABER TOMADO LAS PULSACIONES
         List<Long> pulsacionesPerfectas = new ArrayList<>();
         long tiempo = 0;
@@ -122,7 +137,7 @@ public class MiniJuego extends AppCompatActivity {
             if (figura > 0){
                 pulsacionesPerfectas.add(tiempo);
                 if (figura == 1){
-                    pulsacionesPerfectas.add((long) (duraciónPulso/2));
+                    pulsacionesPerfectas.add(tiempo + (duraciónPulso/2));
                 }
             }
             tiempo += (traducirValor(figura) * duraciónPulso);
@@ -141,27 +156,90 @@ public class MiniJuego extends AppCompatActivity {
         for (int i = 0; i<listaTiemposPulsador.size(); i++)
             listaTiemposPulsador.set(i, (listaTiemposPulsador.get(i) - tiempoInicioDictado) );
 
+
+        List<Long> listaTiemposPulsadorAprox = new ArrayList<>();
         // RECORREMOS LAS DOS LISTAS COMPARANDO LA LONGITUD DE LAS LISTAS Y SU RESPECTIVOS VALORES, HACIENDO UN BAREMO DE LA PRECISION DE LAS PULSACIONES
         if (pulsacionesPerfectas.size() == listaTiemposPulsador.size()){
             puntuacion += 100;
+            listaTiemposPulsadorAprox = listaTiemposPulsador;
         }
-        else{
+        else if (pulsacionesPerfectas.size() < listaTiemposPulsador.size()){
             int numeroErrores = Math.abs((pulsacionesPerfectas.size() - listaTiemposPulsador.size()));
             puntuacion -= (numeroErrores * 50);
-            List<Long> listaTiemposPulsadorAprox = new ArrayList<>();
             for (long tPulsacion : pulsacionesPerfectas){
                 long mejorDiferencia = 8 * duraciónPulso;
                 long tiempoEscogido = 0;
                 for (long tPulsacionAlumno : listaTiemposPulsador){
                     if (mejorDiferencia > Math.abs((tPulsacion - tPulsacionAlumno))){
+                        // Evitamos coger un tiempo si ya lo hemos cogido
+                        if (!listaTiemposPulsadorAprox.contains(tPulsacionAlumno)){
+                            mejorDiferencia = Math.abs((tPulsacion - tPulsacionAlumno));
+                            tiempoEscogido = tPulsacionAlumno;
+                        }
+
+                    }
+                }
+                listaTiemposPulsadorAprox.add(tiempoEscogido);
+            }
+        }
+        else {
+            int numeroErrores = Math.abs((pulsacionesPerfectas.size() - listaTiemposPulsador.size()));
+            puntuacion -= (numeroErrores * 75); //Es mas grave dar de menos que de mas
+            for (long tPulsacion : pulsacionesPerfectas){
+                long mejorDiferencia = 8 * duraciónPulso;
+                long tiempoEscogido = 0;
+                for (long tPulsacionAlumno : listaTiemposPulsador){
+                    if (mejorDiferencia > Math.abs((tPulsacion - tPulsacionAlumno))){
+                        // Debemos coger tiempos ya escogido
                         mejorDiferencia = Math.abs((tPulsacion - tPulsacionAlumno));
                         tiempoEscogido = tPulsacionAlumno;
                     }
                 }
                 listaTiemposPulsadorAprox.add(tiempoEscogido);
             }
-
         }
+
+        int difernciaPulsaciones;
+        // Valoramos cada pulsación comparando con las PulsacionesPerfectas
+        for (int i  = 0; i < listaTiemposPulsadorAprox.size(); i++){
+            difernciaPulsaciones = (int) Math.abs(listaTiemposPulsadorAprox.get(i) - pulsacionesPerfectas.get(i));
+            if (difernciaPulsaciones <= 200){
+                puntuacion += 100 + ((200 - difernciaPulsaciones) * 0.5);
+            }
+            else if (difernciaPulsaciones <= 400){
+                puntuacion += 50 + ((200 - difernciaPulsaciones) * 0.25);
+            }
+            else if (difernciaPulsaciones <= 600){
+                puntuacion += 25 + ((200 - difernciaPulsaciones) * 0.05);
+            }
+        }
+
+        // Actualizamos puntuación
+        tvPuntuacion.setText("Puntuación: " + String.valueOf(puntuacion));
+
+        pulsacionesPerfectas.clear();
+        listaTiemposPulsador.clear();
+        listaTiemposPulsadorAprox.clear();
+
+        if (dictadoActual == dictados){
+            // Llamada al metodo Insertar Puntuacion
+            Intent i = new Intent(this, Puntuacion.class);
+            startActivity(i);
+        }
+        else {
+            vaciarCompas();
+        }
+
+    }
+
+    private void vaciarCompas(){
+        for (ImageView iv :listaFigurasDraw1){
+            layoutActual.removeView(iv);
+        }
+        compas1 = generarCompas();
+        compas2 = generarCompas();
+
+        listaFigurasDraw1 = dibujarFigurasRitmicas(compas1,compas2);
     }
 
     private void moverBarra(){

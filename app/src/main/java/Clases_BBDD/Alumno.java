@@ -1,10 +1,14 @@
-package com.example.rhythmon;
+package Clases_BBDD;
 
+// CLASE ALUMNO
 public class Alumno {
 
-    private int anios, codCentro, codAlumno;
-    private String id_user, nombre, apellidos, contraseña;
+    //Variables globales
+    private int anios, codCentro, codAlumno; // Declaramos los enteros
+    private String id_user, nombre, apellidos, contraseña; // Declaramos las cadenas
 
+    // TENEMOS CONSTRUCTOR SOBRE CARGADO (+ DE 1 CONSTRUCTOR)
+    // Constructor de la Clase (todo menos codAlumno)
     public Alumno (String id_user, String nombre, String apellidos, String contraseña, int anios, int codCentro){
         this.id_user = id_user;
         this.nombre = nombre;
@@ -13,7 +17,7 @@ public class Alumno {
         this.anios = anios;
         this.codCentro = codCentro;
     }
-
+    // Constructor de la Clase (todos los atributos)
     public Alumno (int codAlumno,String id_user, String nombre, String apellidos, String contraseña, int anios, int codCentro){
         this.codAlumno = codAlumno;
         this.id_user = id_user;
@@ -23,6 +27,8 @@ public class Alumno {
         this.anios = anios;
         this.codCentro = codCentro;
     }
+
+    // GETTERS Y SETTERS
 
     public int getCodAlumno(){ return this.codAlumno;}
 
@@ -52,6 +58,7 @@ public class Alumno {
 
     public void setCodAlumno(int codAlumnoSetear){ this.codAlumno = codAlumnoSetear; }
 
+    // Metodo toString hecho para mostrarse en los ArrayList, Spinners, ItemList...
     public String toString(){
         return getNombre() + " " + getApellidos() + " \t " + getId_user() + "-" + getContraseña() + " " + getAnios();
     }

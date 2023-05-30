@@ -7,6 +7,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
+import Clases_BBDD.Centro;
+
 
 public class AdapterCentros extends RecyclerView.Adapter<AdapterCentros.ViewHolderDatos> {
 
