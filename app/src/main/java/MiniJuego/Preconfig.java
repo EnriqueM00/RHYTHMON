@@ -66,7 +66,7 @@ public class Preconfig extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 // Seteamos el texto del TextView de la SeekBar de dictados al progreso que lleve (1,2,3,4 y 5)
-                tvSeekBarDictados.setText(Integer.toString(progress));
+                tvSeekBarDictados.setText(Integer.toString(progress + 1));
             }
         });
 

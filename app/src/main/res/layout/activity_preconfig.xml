@@ -113,8 +113,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="47dp"
                 android:layout_weight="0.2"
-                android:min="1"
-                android:max="5"
+                android:min="0"
+                android:max="4"
                 android:progress="0"
                 android:visibility="visible" />
 

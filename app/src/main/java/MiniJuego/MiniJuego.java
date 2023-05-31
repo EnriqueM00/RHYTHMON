@@ -3,8 +3,10 @@ package MiniJuego;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.TypedValue;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 import android.media.SoundPool;
 
 import com.example.rhythmon.R;
+import com.example.rhythmon.Ranking;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -29,7 +32,7 @@ import java.util.Map;
 import java.util.Random;
 
 import BBDD.BBDD_Helper;
-import Clases_BBDD.Puntuacion;
+import BBDD.Estructura_BBDD;
 
 // CLASE "MiniJuego"
 public class MiniJuego extends AppCompatActivity {
@@ -116,14 +119,15 @@ public class MiniJuego extends AppCompatActivity {
     }
     // Medodo para añadir la nota al respectivo Alumno que haya realizado la actividad (inserción en la BD)
     private void añadirNota(){
-        //SQLiteDatabase db = helper.getWritableDatabase();
-        //ContentValues values = new ContentValues();
+        DecimalFormat df = new DecimalFormat("#.00");
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues values = new ContentValues();
         puntSobre10 = 10 * (puntuacion / puntuacionMax);
 
-        //values.put(Estructura_BBDD.PUNTUACION, String.valueOf(puntuacion));
-        //values.put(Estructura_BBDD.COD_ALUMNO_PUNTUACION, String.valueOf(codAlumno));
+        values.put(Estructura_BBDD.PUNTUACION, String.valueOf(df.format(puntSobre10)));
+        values.put(Estructura_BBDD.COD_ALUMNO_PUNTUACION, String.valueOf(codAlumno));
 
-        //db.insert(Estructura_BBDD.TABLE_PUNTUACION, null, values);
+        db.insert(Estructura_BBDD.TABLE_PUNTUACION, null, values);
     }
     /*
     *
@@ -132,7 +136,7 @@ public class MiniJuego extends AppCompatActivity {
     */
     // Metodo que al pulsar el "btnPulsador" reproduzca el sonido de metronomo y añada el tiempo en el que es pulsado a la "listaTiemposPulsador"
     public void btnPulsador(View view){
-        sp.play(idSonido, 1, 1, 1, 0, 0);
+        sp.play(idSonido, 1, 1, 1, 0, 1.2F);
         listaTiemposPulsador.add(System.currentTimeMillis());
     }
     /*
@@ -185,15 +189,17 @@ public class MiniJuego extends AppCompatActivity {
         for (int i = 0; i<listaTiemposPulsador.size(); i++)
             listaTiemposPulsador.set(i, (listaTiemposPulsador.get(i) - tiempoInicioDictado) );
 
+        if (pulsacionesPerfectas.size()==0){
+            puntuacionMax += 100;
+        }
+        else{
+            puntuacionMax += ((100 + (200 * 0.5)) * pulsacionesPerfectas.size()) + 100;
+        }
 
         List<Long> listaTiemposPulsadorAprox = new ArrayList<>();
         // RECORREMOS LAS DOS LISTAS COMPARANDO LA LONGITUD DE LAS LISTAS Y SU RESPECTIVOS VALORES, HACIENDO UN BAREMO DE LA PRECISION DE LAS PULSACIONES
         if (pulsacionesPerfectas.size() == listaTiemposPulsador.size()){
             puntuacion += 100;
-            if (pulsacionesPerfectas.size()==0){
-                puntuacionMax += 100;
-            }
-            puntuacionMax += ((100 + (200 * 0.5)) * pulsacionesPerfectas.size()) + 100;
             listaTiemposPulsadorAprox = listaTiemposPulsador;
         }
         // SI HAY MENOS PULSACIONES HACEMOS UNA APROXIMACIÓN A LA PULSACIÓN PERFECTA PARA QUE EL TAMAÑO DE LAS LISTAS SEAN IGUALES
@@ -262,7 +268,10 @@ public class MiniJuego extends AppCompatActivity {
         if ((dictadoActual - 1) == dictados){
             // Llamada al metodo Insertar Puntuacion
             añadirNota();
-            Intent i = new Intent(this, Puntuacion.class);
+            Intent i = new Intent(this, Ranking.class);
+            Bundle b = new Bundle();
+            b.putInt("codAlumno", codAlumno);
+            i.putExtras(b);
             startActivity(i);
         }
         // Si el numero del dictado actual no es igual al numero de dictados vaciamos los compases y les llenamos de nuevo
@@ -291,8 +300,8 @@ public class MiniJuego extends AppCompatActivity {
         TranslateAnimation moverDerecha = new TranslateAnimation( 0 , tamañoDictado, 0, 0);
         moverDerecha.setDuration(duraciónPulso * 8);//Duracion 2 compases
         moverDerecha.setFillAfter(true); // Seteamos el FillAfter a true para que se quede donde a terminado la animación
-        moverDerecha.setInterpolator(new LinearInterpolator()); // Seteamos un Interpolator para que la velocidad sea la misma y no vaya dando tirones
-        ivLineaGuia.startAnimation(moverDerecha); //Le decimos en que ImageView va a empezar la animación
+        moverDerecha.setInterpolator(new LinearInterpolator()); // Seteamos un Interpolator para que la velocidad sea constante
+        ivLineaGuia.startAnimation(moverDerecha); //Hacemos que ImageView va a empezar la animación
     }
 
     // Metodo que activa o desactiva la funcionalidad de los botones a nuestro gusto para que no se puedan usar en la ejecución del juego ya que
@@ -315,7 +324,7 @@ public class MiniJuego extends AppCompatActivity {
         if (contador == 3){
             cambiarHabilitacionBotones(); //Desactivamos los botonos de play y el checkBox
             masterHandler.postDelayed(new Runnable() { //Utilizamos el manejador de hilos para que empiece con retraso los 2 metodos siguiente
-                @Override                               // empiezan con retraso porque tenemos que esperar a que termine la cuenta atras y el dictado
+                @Override                               // porque tenemos que esperar a que termine la cuenta atras y el dictado
                 public void run() {
                     // Llamada al metodo "cambiarHabilitacionBotones()"
                     cambiarHabilitacionBotones();
@@ -324,11 +333,10 @@ public class MiniJuego extends AppCompatActivity {
                 }
             },duraciónPulso * 11); //Por 11 sale de por 8 tiempos del compas + 3 de espera
         }
-        sp.play(idSonido, 1, 1, 1, 0, 0); //Reproduccioón del sonido
         if (contador == 0){
             btnPulsador.setEnabled(true);
             tvCuentaAtras.setText("");
-            masterHandler.removeCallbacks(hiloCuenta);
+            masterHandler.removeCallbacks(hiloCuenta); //Mirar a ver si hay alguna llamada pendiente para borrarla en el manejador
             if (checkBoxLineaGuia.isChecked()){
                 checkBoxLineaGuia.setEnabled(false);
                 moverBarra();
@@ -337,14 +345,15 @@ public class MiniJuego extends AppCompatActivity {
         }
         else{
             tvCuentaAtras.setText("\n " + contador);
+            sp.play(idSonido, 1, 1, 1, 0, 1.2F); //Reproduccioón del sonido
+
         }
         contador--;
     }
 
-    Runnable hiloCuenta = new Runnable() { //Metodo Runnable de la cuenta atras (basicamente un hilo)
+    Runnable hiloCuenta = new Runnable() { //Metodo Runnable abre un hilo para el metodo cuenta atras
         @Override
         public void run() {
-            // llamada al metodo cuenta "cuentaAtras()"
             cuentaAtras();
         }
     };
@@ -398,8 +407,7 @@ public class MiniJuego extends AppCompatActivity {
                     break;
                 }
             }
-            // Llamamos a "requestLayout()" porque vamos a cambiar el tamaño de una vista y puede afectar a todo el Layout, esto hara que ningun elemento
-            // se vea afectado por el cambio
+            // Llamamos a "requestLayout()" para solicitar una nueva disposición de las vistas en el Layout
             layoutActual.requestLayout();
             // Añadimos la vista (view) al Layout pasandole la imagen y los parametros
             layoutActual.addView(ivFigura, lpFigura);
@@ -531,7 +539,7 @@ public class MiniJuego extends AppCompatActivity {
         return valoresDrawable;
     }
     // Metodo para generar los valores aleatoriamente, tenemos un array con los valores posibles y coge aleatoriamente posiciones del array (descartamos posibles fallos)
-    public List<Integer> generarValores(){
+    private List<Integer> generarValores(){
         List<Integer> compas = new ArrayList<>();
         Random r = new Random();
         int valor;
