@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.rhythmon.AdapterAlumnos;
+import AdapterS.AdapterAlumnos;
 import com.example.rhythmon.R;
 
 import java.util.ArrayList;

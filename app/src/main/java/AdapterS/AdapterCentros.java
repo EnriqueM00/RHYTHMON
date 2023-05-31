@@ -1,10 +1,13 @@
-package com.example.rhythmon;
+package AdapterS;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.rhythmon.R;
+
 import java.util.ArrayList;
 
 import Clases_BBDD.Centro;
