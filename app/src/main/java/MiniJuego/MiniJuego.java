@@ -22,7 +22,6 @@ import android.widget.TextView;
 import android.media.SoundPool;
 
 import com.example.rhythmon.R;
-import com.example.rhythmon.Ranking;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

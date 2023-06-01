@@ -1,4 +1,4 @@
-package com.example.rhythmon;
+package MiniJuego;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,7 +12,15 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.rhythmon.MainActivity;
+import com.example.rhythmon.R;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 import AdapterS.AdapterPuntuaciones;
 import BBDD.BBDD_Helper;
@@ -42,11 +50,12 @@ public class Ranking extends AppCompatActivity {
         listarAlumnos();
         listarPuntuaciones();
         recogerAlumno();
+        ArrayList<Double> listaPuntos = obtenerValoresMayores(listaPuntuaciones, 8);
         tvAlumno = findViewById(R.id.tvAlumno);
         tvAlumno.setText(nombre + "  " + apellidos);
         rvPuntuación = findViewById(R.id.rvPuntuacion);
         rvPuntuación.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        AdapterPuntuaciones adapter = new AdapterPuntuaciones(listaPuntuaciones);
+        AdapterPuntuaciones adapter = new AdapterPuntuaciones(listaPuntos);
         rvPuntuación.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         rvPuntuación.setAdapter(adapter);
     }
@@ -143,6 +152,33 @@ public class Ranking extends AppCompatActivity {
             Toast.makeText(this, "No hay ninguna puntuación.", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private ArrayList<Double> obtenerValoresMayores(ArrayList<Puntuacion> lista, int cantidad) {
+        ArrayList<Double> listaDouble = new ArrayList<>();
+        for (Puntuacion p : lista){
+            listaDouble.add(p.getPuntuacion());
+        }
+        PriorityQueue<Double> queue = new PriorityQueue<>(cantidad);
+
+        for (Double valor : listaDouble) {
+            if (queue.size() < cantidad || valor > queue.peek()) {
+                if (queue.size() == cantidad) {
+                    queue.poll();  // Eliminar el valor más pequeño si se alcanza la capacidad máxima
+                }
+                queue.offer(valor);
+            }
+        }
+
+        ArrayList<Double> valoresMayores = new ArrayList<>(cantidad);
+        Double[] arrayOrdenado = queue.toArray(new Double[0]);
+        Arrays.sort(arrayOrdenado, Collections.reverseOrder());
+        for (Double valor : arrayOrdenado) {
+            valoresMayores.add(valor);
+        }
+
+        return valoresMayores;
+    }
+
 
     public void volverAJugar(View view){
         Intent i = new Intent(this, Preconfig.class);

@@ -15,10 +15,10 @@ import Clases_BBDD.Puntuacion;
 // CLASE AdapterPuntuación
 public class AdapterPuntuaciones extends RecyclerView.Adapter<AdapterPuntuaciones.ViewHolderDatos> {
 
-    private ArrayList<Puntuacion> listaPuntuacion;
+    private ArrayList<Double> listaPuntuacion;
 
     //Constructor AdapterPuntuaciones
-    public AdapterPuntuaciones(ArrayList<Puntuacion> listaPuntuacion){ this.listaPuntuacion = listaPuntuacion; }
+    public AdapterPuntuaciones(ArrayList<Double> listaPuntuacion){ this.listaPuntuacion = listaPuntuacion; }
 
     // Crear contenedor de datos relacionandolo con el item_list
     public AdapterPuntuaciones.ViewHolderDatos onCreateViewHolder(ViewGroup parent, int viewType){
@@ -49,9 +49,9 @@ public class AdapterPuntuaciones extends RecyclerView.Adapter<AdapterPuntuacione
         }
 
         // Asignar los datos a los componentes
-        public void asignarDatos(Puntuacion puntuacion){
+        public void asignarDatos(Double d){
             tvPuntuacion.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            tvPuntuacion.setText(Double.toString(puntuacion.getPuntuacion()));
+            tvPuntuacion.setText(Double.toString(d));
         }
     }
 }
