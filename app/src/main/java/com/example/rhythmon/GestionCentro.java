@@ -43,6 +43,7 @@ public class GestionCentro extends AppCompatActivity {
         i.putExtras(b);
         // Empezamos la nueva activity con el Intent
         startActivity(i);
+        finish();
     }
 
     /*
@@ -59,6 +60,7 @@ public class GestionCentro extends AppCompatActivity {
         i.putExtras(b);
 
         startActivity(i);
+        finish();
     }
 
     /*
@@ -75,6 +77,7 @@ public class GestionCentro extends AppCompatActivity {
         i.putExtras(b);
 
         startActivity(i);
+        finish();
     }
 
     /*
@@ -91,6 +94,7 @@ public class GestionCentro extends AppCompatActivity {
         i.putExtras(b);
 
         startActivity(i);
+        finish();
     }
 
     /*
@@ -99,5 +103,9 @@ public class GestionCentro extends AppCompatActivity {
      *
      */
     // Metodo para volver a la activity anterior y cerrar la actual
-    public void volverGestionCentro(View view){ finish(); }
+    public void volverGestionCentro(View view){
+        Intent i = new Intent(this, InicioCentro.class);
+        startActivity(i);
+        finish();
+    }
 }

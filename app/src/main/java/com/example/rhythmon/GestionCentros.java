@@ -39,6 +39,7 @@ public class GestionCentros extends AppCompatActivity {
     public void actualizarCentros(View view){
         Intent i = new Intent(this, ActualizarCentros.class);
         startActivity(i);
+        finish();
     }
 
     /*
@@ -50,6 +51,7 @@ public class GestionCentros extends AppCompatActivity {
     public void eliminarCentros(View view){
         Intent i = new Intent(this, EliminarCentros.class);
         startActivity(i);
+        finish();
     }
 
     /*
@@ -57,6 +59,10 @@ public class GestionCentros extends AppCompatActivity {
      * @param view
      *
      */
-    // Metodo para volver a la Activity anterio y cerrar la actual
-    public void volverGestionCentros(View view){ finish(); }
+    // Metodo para volver a la Activity anterior y cerrar la actual
+    public void volverGestionCentros(View view){
+        Intent i = new Intent(this, InicioCentro.class);
+        startActivity(i);
+        finish();
+    }
 }

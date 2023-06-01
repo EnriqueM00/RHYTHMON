@@ -25,6 +25,7 @@ public class IniciarSesion extends AppCompatActivity {
     public void inicioCentro(View view){
         Intent i = new Intent(this,InicioCentro.class);
         startActivity(i);
+        finish();
     }
 
     /*
@@ -36,6 +37,7 @@ public class IniciarSesion extends AppCompatActivity {
     public void inicioUsuario(View view){
         Intent i = new Intent(this,InicioUsuario.class);
         startActivity(i);
+        finish();
     }
 
     /*
@@ -45,6 +47,8 @@ public class IniciarSesion extends AppCompatActivity {
      */
     // Metodo para volver a la Activity anterior y cerrar la actual
     public void volverInicioSesion(View view){
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
         finish();
     }
 }

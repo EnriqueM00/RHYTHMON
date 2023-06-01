@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -12,6 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import AdapterS.AdapterAlumnos;
+
+import com.example.rhythmon.GestionCentro;
+import com.example.rhythmon.InicioCentro;
 import com.example.rhythmon.R;
 
 import java.util.ArrayList;
@@ -105,5 +109,12 @@ public class ListarAlumnos extends AppCompatActivity {
      *
     */
     // Metodo para volver a la pagina anterior y cerrar la actual
-    public void volverListarAlumnos(View view){ finish(); }
+    public void volverListarAlumnos(View view){
+        Intent i = new Intent(this, GestionCentro.class);
+        Bundle b = new Bundle();
+        b.putInt("codCentro", codCentro);
+        i.putExtras(b);
+        startActivity(i);
+        finish();
+    }
 }

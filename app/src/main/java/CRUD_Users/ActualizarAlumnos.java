@@ -3,6 +3,7 @@ package CRUD_Users;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.rhythmon.GestionCentro;
 import com.example.rhythmon.R;
 
 import java.util.ArrayList;
@@ -356,5 +358,12 @@ public class ActualizarAlumnos extends AppCompatActivity {
     *
     */
     // Metodo para volver a la pagina anterior y cerrar esta
-    public void volverActualizarAlumnos(View view){ finish(); }
+    public void volverActualizarAlumnos(View view){
+        Intent i = new Intent(this, GestionCentro.class);
+        Bundle b = new Bundle();
+        b.putInt("codCentro", codCentro);
+        i.putExtras(b);
+        startActivity(i);
+        finish();
+    }
 }

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.example.rhythmon.MainActivity;
 import com.example.rhythmon.R;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,37 +31,54 @@ import Clases_BBDD.Alumno;
 import Clases_BBDD.Puntuacion;
 import MiniJuego.Preconfig;
 
+//CLASE "Ranking"
 public class Ranking extends AppCompatActivity {
 
-    private ArrayList<Alumno> listaAlumnos;
-    private ArrayList<Puntuacion> listaPuntuaciones;
-    private RecyclerView rvPuntuación;
-    private TextView tvAlumno;
-    private String nombre, apellidos;
-    private int codAlumno;
-    private BBDD_Helper helper = new BBDD_Helper(this);
+    //Variables globales
+    private DecimalFormat df = new DecimalFormat("#.00");
+    private ArrayList<Alumno> listaAlumnos; //Declaramos un ArrayList de Alumno
+    private ArrayList<Puntuacion> listaPuntuaciones; //Declaramos un ArrayList de Puntuacion
+    private RecyclerView rvPuntuación; //RecyclerView donde imprimiremos una lista de Doubles
+    private TextView tvAlumno, tvPuntuacionActual; //Declaramos el TextView donde mostraremos el alumno
+    private String nombre, apellidos; //Declaramos dos cadenas
+    private double puntuaciónActual; //Declaramos un double
+    private int codAlumno;//Declaramos un entero para el "codAlumno"
+    private BBDD_Helper helper = new BBDD_Helper(this); //Declaramos e inicializamos un objeto BBDD_Helper (gestor BD)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ranking);
+        //Declaramos e inicializamos un Bundle con los extras de la Activity anterior
         Bundle b = getIntent().getExtras();
+        //Le asignamos el valor de la clave "codAlumno" a nuestra variable
         codAlumno = b.getInt("codAlumno");
+        puntuaciónActual = b.getDouble("puntos");
+        //Inicializamos los ArrayList de Alumno, Puntuacionez
         listaAlumnos = new ArrayList<Alumno>();
         listaPuntuaciones = new ArrayList<Puntuacion>();
+        //Rellenamos los ArrayList. Llamada a los metodos "listarAlumnos()" y "listarPuntuaciones()"
         listarAlumnos();
         listarPuntuaciones();
+        //Llamamos al metodo "recogerAlumno()"
         recogerAlumno();
+        //Creamos un nuevo ArrayList de Doubles asignandole el ArrayList de doubles que nos devuelve el metodo "obtenerValoresMayores()"
         ArrayList<Double> listaPuntos = obtenerValoresMayores(listaPuntuaciones, 8);
         tvAlumno = findViewById(R.id.tvAlumno);
+        tvPuntuacionActual = findViewById(R.id.tvPuntuacionActual);
+        //Seteamos el texto del Alumno con el nombre y los apellidos del mismo
         tvAlumno.setText(nombre + "  " + apellidos);
+        tvPuntuacionActual.setText("Puntuacón actual:  " + String.valueOf(df.format(puntuaciónActual)).toString());
         rvPuntuación = findViewById(R.id.rvPuntuacion);
         rvPuntuación.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        //Declaramos un AdapterPuntuaciones pasandole el ArrayList de Doubles con las Puntuaciones ordenadas
         AdapterPuntuaciones adapter = new AdapterPuntuaciones(listaPuntos);
+        //Seteamos la aliniación del RecyclerView
         rvPuntuación.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        //Seteamos el adapter del RecyclerView pasandole el que acabamos de inicializar
         rvPuntuación.setAdapter(adapter);
     }
-
+    //Metodo para recoger el nombre y los apellidos del alumno, comprobando su codAlumno
     private void recogerAlumno(){
         for (Alumno a: listaAlumnos){
             if (a.getCodAlumno() == codAlumno){
@@ -68,7 +87,7 @@ public class Ranking extends AppCompatActivity {
             }
         }
     }
-
+    //Metodo que rellena la lista de alumnos
     private void listarAlumnos(){
         // Creamos un objeto SQLiteDatabase que igualaremos a al BBDD_Helper para poder leer en la BD
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -112,7 +131,7 @@ public class Ranking extends AppCompatActivity {
             Toast.makeText(this, "No hay ningún alumno.", Toast.LENGTH_SHORT).show();
         }
     }
-
+    //Metodo que rellena el ArrayList de Puntuaciones
     private void listarPuntuaciones(){
         // Creamos un objeto SQLiteDatabase que igualaremos a al BBDD_Helper para poder leer en la BD
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -152,34 +171,46 @@ public class Ranking extends AppCompatActivity {
             Toast.makeText(this, "No hay ninguna puntuación.", Toast.LENGTH_SHORT).show();
         }
     }
-
+    /*
+    *
+    * @param lista, cantidad
+    */
+    //Metodo para escoger las puntuaciones mas altas del alumno y ordenarlas de mayor a menor, retorna una lista de Doubles
     private ArrayList<Double> obtenerValoresMayores(ArrayList<Puntuacion> lista, int cantidad) {
         ArrayList<Double> listaDouble = new ArrayList<>();
-        for (Puntuacion p : lista){
+        // Obtener las puntuaciones de la lista original y almacenarlas en listaDouble
+        for (Puntuacion p : lista) {
             listaDouble.add(p.getPuntuacion());
         }
         PriorityQueue<Double> queue = new PriorityQueue<>(cantidad);
-
+        // Iterar sobre las puntuaciones en listaDouble
         for (Double valor : listaDouble) {
+            // Verificar si la cola tiene menos elementos que la cantidad deseada o si el valor actual es mayor que el valor más pequeño en la cola
             if (queue.size() < cantidad || valor > queue.peek()) {
+                // Si la cola ya alcanzó la capacidad deseada, eliminar el valor más pequeño
                 if (queue.size() == cantidad) {
-                    queue.poll();  // Eliminar el valor más pequeño si se alcanza la capacidad máxima
+                    queue.poll();
                 }
+                // Agregamos el valor actual a la cola
                 queue.offer(valor);
             }
         }
-
         ArrayList<Double> valoresMayores = new ArrayList<>(cantidad);
         Double[] arrayOrdenado = queue.toArray(new Double[0]);
+        // Ordenamos el array en orden descendente
         Arrays.sort(arrayOrdenado, Collections.reverseOrder());
+        // Agregamos los valores ordenados a la lista valoresMayores
         for (Double valor : arrayOrdenado) {
             valoresMayores.add(valor);
         }
-
+        // Devolvemos la lista de los valores más grandes
         return valoresMayores;
     }
-
-
+    /*
+    *
+    * @param view
+    * */
+    //Metodo para volver a jugar, nos lleva a la pantalla Preconfig, cerrando la actual
     public void volverAJugar(View view){
         Intent i = new Intent(this, Preconfig.class);
         Bundle b = new Bundle();
@@ -188,7 +219,11 @@ public class Ranking extends AppCompatActivity {
         startActivity(i);
         finish();
     }
-
+    /*
+    *
+    * @param view
+    * */
+    //Metodo que vuelve a la pantalla de inicio, cerrando la actual
     public void volverPantallaInicio(View view){
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);

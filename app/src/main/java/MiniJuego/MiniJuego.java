@@ -270,8 +270,10 @@ public class MiniJuego extends AppCompatActivity {
             Intent i = new Intent(this, Ranking.class);
             Bundle b = new Bundle();
             b.putInt("codAlumno", codAlumno);
+            b.putDouble("puntos", puntSobre10);
             i.putExtras(b);
             startActivity(i);
+            finish();
         }
         // Si el numero del dictado actual no es igual al numero de dictados vaciamos los compases y les llenamos de nuevo
         else {

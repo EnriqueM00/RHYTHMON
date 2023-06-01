@@ -108,6 +108,7 @@ public class Preconfig extends AppCompatActivity {
                 b.putInt("codAlumno", codAlumno);
                 i.putExtras(b);
                 startActivity(i);
+                finish();
             }
         });
     }

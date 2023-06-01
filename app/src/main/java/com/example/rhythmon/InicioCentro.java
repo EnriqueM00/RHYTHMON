@@ -64,6 +64,7 @@ public class InicioCentro extends AppCompatActivity {
                                 // Vaciamos los campos utilizados
                                 etIDUser.setText("");
                                 etPassword.setText("");
+                                finish();
                             } else {
                                 // Creamos un intent que va de esta Activity a GestionCentro
                                 Intent i = new Intent(InicioCentro.this, GestionCentro.class);
@@ -78,6 +79,7 @@ public class InicioCentro extends AppCompatActivity {
                                 // Vaciamos los campos utilizados
                                 etIDUser.setText("");
                                 etPassword.setText("");
+                                finish();
                             }
                         }
                         // Si no es esa la contraseña se sale del bucle por si otro usuario tuviera la misma contraseña
@@ -143,5 +145,9 @@ public class InicioCentro extends AppCompatActivity {
      *
     */
     // Metodo para volver a la pagina anterior y cerrar la actual
-    public void volverInicioCentro(View view){ finish(); }
+    public void volverInicioCentro(View view){
+        Intent i = new Intent(this, IniciarSesion.class);
+        startActivity(i);
+        finish();
+    }
 }

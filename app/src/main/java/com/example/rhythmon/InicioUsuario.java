@@ -67,6 +67,7 @@ public class InicioUsuario extends AppCompatActivity {
 
                             etIDUser.setText("");
                             etPassword.setText("");
+                            finish();
                         }
                         // Si no es esa la contraseña se sale del bucle por si otro usuario tuviera la misma contraseña
                         else{
@@ -132,5 +133,9 @@ public class InicioUsuario extends AppCompatActivity {
      *
      */
     // Metodo para volver a la pagina anterior y cerrar la actual
-    public void volverInicioUsuario(View view){ finish(); }
+    public void volverInicioUsuario(View view){
+        Intent i = new Intent(this, IniciarSesion.class);
+        startActivity(i);
+        finish();
+    }
 }

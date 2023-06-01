@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     public void abrirInicio(View view){
         Intent i = new Intent( this,IniciarSesion.class);
         startActivity(i);
+        finish();
     }
 
     /*

@@ -2,6 +2,7 @@ package CRUD_Users;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.rhythmon.GestionCentros;
 import com.example.rhythmon.R;
 
 import java.util.ArrayList;
@@ -126,5 +128,9 @@ public class EliminarCentros extends AppCompatActivity {
     *
     * */
     // Metodo para volver a la pagina anterior y cerrar la actual
-    public void volverEliminarCentros(View view){ finish(); }
+    public void volverEliminarCentros(View view){
+        Intent i = new Intent(this, GestionCentros.class);
+        startActivity(i);
+        finish();
+    }
 }
