@@ -54,6 +54,7 @@ public class InicioUsuario extends AppCompatActivity {
                 for (Alumno a : listaAlumnos){
                     // Comprueba si el usuario introducido corresponde con alguno de la BD
                     if (a.getId_user().equals(user)){
+                        usuarioEncontrado = true;
                         // Comprueba si el password corresponde con el elemento que acabamos de comprobar
                         if (a.getContraseña().equals(password)){
                             // Creamos un Intent que va de esta Activity a Preconfig
@@ -63,7 +64,6 @@ public class InicioUsuario extends AppCompatActivity {
                             b.putInt("codAlumno",a.getCodAlumno());
                             i.putExtras(b);
                             startActivity(i);
-                            usuarioEncontrado = true;
 
                             etIDUser.setText("");
                             etPassword.setText("");

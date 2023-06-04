@@ -624,5 +624,12 @@ public class MiniJuego extends AppCompatActivity {
     *
     */
     // Metodo para volver a la pagina anterior y cerrar la actual
-    public void volverMinijuego(View view){ finish(); }
+    public void volverMinijuego(View view){
+        Intent i = new Intent(this, Preconfig.class);
+        Bundle b = new Bundle();
+        b.putInt("codAlumno", codAlumno);
+        i.putExtras(b);
+        startActivity(i);
+        finish();
+    }
 }

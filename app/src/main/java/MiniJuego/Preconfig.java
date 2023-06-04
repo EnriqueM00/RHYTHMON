@@ -15,6 +15,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.example.rhythmon.InicioUsuario;
 import com.example.rhythmon.R;
 
 // CLASE "Preconfig"
@@ -182,5 +183,9 @@ public class Preconfig extends AppCompatActivity {
     *
     */
     // Metodo para volver a la pantalla anterior y cerrar la actual
-    public void volverPreConfig(View view){ finish(); }
+    public void volverPreConfig(View view){
+        Intent i = new Intent(this, InicioUsuario.class);
+        startActivity(i);
+        finish();
+    }
 }

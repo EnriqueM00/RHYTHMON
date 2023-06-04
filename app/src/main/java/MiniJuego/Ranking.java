@@ -182,7 +182,7 @@ public class Ranking extends AppCompatActivity {
         for (Puntuacion p : lista) {
             listaDouble.add(p.getPuntuacion());
         }
-        PriorityQueue<Double> queue = new PriorityQueue<>(cantidad);
+        PriorityQueue<Double> queue = new PriorityQueue<Double>(cantidad);
         // Iterar sobre las puntuaciones en listaDouble
         for (Double valor : listaDouble) {
             // Verificar si la cola tiene menos elementos que la cantidad deseada o si el valor actual es mayor que el valor más pequeño en la cola

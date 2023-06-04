@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.rhythmon.R;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import Clases_BBDD.Centro;
@@ -40,7 +42,7 @@ public class AdapterPuntuaciones extends RecyclerView.Adapter<AdapterPuntuacione
     public static class ViewHolderDatos extends RecyclerView.ViewHolder{
         //Declarar TextView
         private TextView tvPuntuacion;
-
+        private DecimalFormat df = new DecimalFormat("#.00");
         // Constructor ViewHolderDatos
         public ViewHolderDatos(View itemView){
             super(itemView);
@@ -51,7 +53,7 @@ public class AdapterPuntuaciones extends RecyclerView.Adapter<AdapterPuntuacione
         // Asignar los datos a los componentes
         public void asignarDatos(Double d){
             tvPuntuacion.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            tvPuntuacion.setText(Double.toString(d));
+            tvPuntuacion.setText(String.format( "%.2f", d) );
         }
     }
 }

@@ -53,6 +53,7 @@ public class InicioCentro extends AppCompatActivity {
                 for (Centro c : listaCentros) {
                     // Comprobamos si el user introducido corresponde con alguno de la BD
                     if (c.getId_user().equals(user)) {
+                        centroEncontrado = true;
                         // Comprobamos si el password corresponde con el elemento que acabamos de comprobar
                         if (c.getContraseña().equals(password)) {
                             // Comprobamos si el usuario que esta Iniciando sesion es el root o es un centro normal
@@ -60,7 +61,6 @@ public class InicioCentro extends AppCompatActivity {
                                 // Creamos un intent que va de esta Activity a GestionCentros
                                 Intent i = new Intent(InicioCentro.this, GestionCentros.class);
                                 startActivity(i);
-                                centroEncontrado = true;
                                 // Vaciamos los campos utilizados
                                 etIDUser.setText("");
                                 etPassword.setText("");
@@ -75,7 +75,6 @@ public class InicioCentro extends AppCompatActivity {
                                 i.putExtras(b);
 
                                 startActivity(i);
-                                centroEncontrado = true;
                                 // Vaciamos los campos utilizados
                                 etIDUser.setText("");
                                 etPassword.setText("");
